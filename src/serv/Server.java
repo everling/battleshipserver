@@ -181,6 +181,8 @@ public class Server {
 			return "."; //previously shot
 		}
 		
+		shotAt.add(attack);
+		
 		for(Ship s : ships){
 			if(s.isHit(attack)){
 				if(s.isSunk())
