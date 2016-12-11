@@ -213,7 +213,8 @@ public class Server {
         public void handle(HttpExchange tt) throws IOException {
         	
         	String params = tt.getRequestURI().getQuery();
-        	
+            String response = "";
+
         	int t = -1;
         	if(params != null){
         		for (String p : params.split("&")) {
@@ -221,11 +222,14 @@ public class Server {
                     if (pair.length>1 && pair[0].equals("t")) {
                     	t = Integer.parseInt(pair[1]);
                     }
+                    else if (pair.length>1 && pair[0].equals("init")) {
+                    	response = initPlayer(pair[1]);
+                    	
+                    }
                 }
         	}
 
-            String response = "";
-        	if(t == -1){
+        	if(t == -1 && response.length() == 0){
         		response = msg;
         	}
         	
