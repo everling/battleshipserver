@@ -118,18 +118,25 @@ public class Server {
 		for(int i = 0; i < grid; i++){
 			String ch = alpha.substring(i,i+1);
 			System.out.print(ch +"\t");
+
 			for(int j = 0; j < grid; j++){
 				String pos = ch + (j+1);
 				
+				String toDraw = null;
+				
 				for(Ship s : ships){
 					if(s.occupies(pos) && shotAt.contains(pos))
-						System.out.print("x");
+						toDraw = "x";
 					else if(s.occupies(pos))
-						System.out.print(ships.indexOf(s));
-					else if(shotAt.contains(pos))
-						System.out.print(".");
+						toDraw = ""+ships.indexOf(s);
 				}
-				System.out.print("\t");
+				
+				if(toDraw == null && shotAt.contains(pos))
+					toDraw = "o";
+				else if (toDraw == null)
+					toDraw = "";
+				
+				System.out.print(toDraw+"\t");
 
 			}
 			System.out.println();
