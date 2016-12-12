@@ -49,15 +49,59 @@ public class Server {
         			command += " "+ss[2];
         		
         		String result = playerCommand(command);
+        		
         		String broadcast = t++ + " " +command +" " +result;
         		msg = broadcast;
         		System.out.println(broadcast);
         		commandHistory.add(broadcast);
+        		
+        		if(result.equals("X")){
+        			String winner = returnWin();
+        			if(winner != null){
+        				broadcast = t++ +" " +winner +" " +"WIN";
+        				msg = broadcast;
+                		System.out.println(broadcast);
+                		commandHistory.add(broadcast);
+        			}
+        		}
+        		
+        		
         	}
         	
         }
 		
 	}
+	
+	
+	private String returnWin(){
+		
+		if(shipsP1 == null || shipsP2 == null)
+			return null;
+		
+		boolean win = true;
+		for(Ship s : shipsP2){
+			if(!s.isSunk()){
+				win = false;
+				break;
+			}
+		}
+		if(win)
+			return "P1"; 
+		
+		win = true;
+		for(Ship s : shipsP1){
+			if(!s.isSunk()){
+				win = false;
+				break;
+			}
+		}
+		if(win)
+			return "P2"; 
+		
+		return null;
+	}
+	
+	
 	
 	/**
 	 * Client tells server of ship setup
