@@ -18,7 +18,10 @@ public class Server {
 	private volatile List<String> shotAtP1 = new ArrayList<String>();
 	private volatile List<String> shotAtP2 = new ArrayList<String>();
 	private volatile List<String> commandHistory = new ArrayList<String>();
+	private volatile String playerTurn = "P1";
+	private volatile int t = 0;
 	private final int grid = 5;
+	
 
 	
 	public void run() throws Exception{
@@ -29,7 +32,6 @@ public class Server {
 	    
 	    Scanner sc = new Scanner(System.in);
         
-	    int t = 0;
 	    
         while(sc.hasNextLine()){
         	msg = sc.nextLine();
@@ -47,31 +49,31 @@ public class Server {
         		String command = ss[1];
         		if(ss.length == 3)
         			command += " "+ss[2];
-        		
-        		String result = playerCommand(command);
-        		
-        		String broadcast = t++ + " " +command +" " +result;
-        		msg = broadcast;
-        		System.out.println(broadcast);
-        		commandHistory.add(broadcast);
-        		
-        		if(result.equals("X")){
-        			String winner = returnWin();
-        			if(winner != null){
-        				broadcast = t++ +" " +winner +" " +"WIN";
-        				msg = broadcast;
-                		System.out.println(broadcast);
-                		commandHistory.add(broadcast);
-        			}
-        		}
-        		
-        		
+        		parseCommand(command);
+        	       		
         	}
         	
         }
 		
 	}
 	
+	private void parseCommand(String command){
+		String result = playerCommand(command);
+		String broadcast = t++ + " " +command +" " +result;
+		msg = broadcast;
+		System.out.println(broadcast);
+		commandHistory.add(broadcast);
+		
+		if(result.equals("X")){
+			String winner = returnWin();
+			if(winner != null){
+				broadcast = t++ +" " +winner +" " +"WIN";
+				msg = broadcast;
+        		System.out.println(broadcast);
+        		commandHistory.add(broadcast);
+			}
+		}
+	}
 	
 	private String returnWin(){
 		
@@ -193,7 +195,8 @@ public class Server {
 	
 	/**
 	 * This is the interface between the speech server and the game server.
-	 * Valid commands (and feedback for invalid commands) is broadcasted to the game clients.
+	 * Valid commands (and feedback for invalid commands) are broadcasted to the game clients.
+	 * Upon successful command, switches the player turn.
 	 * @param command Attack on the form "P1 A5" for P1 to strike A1 on P2. 
 	 * @return 	"x" -> hit
 	 * 			"X" -> hit and sunk
@@ -206,7 +209,7 @@ public class Server {
 		String[] c = command.split(" ");
 		
 		if(c.length != 2)
-			return "bad length";
+			return "bad_length";
 
 		String attack = c[1];
 		
@@ -216,21 +219,23 @@ public class Server {
 		List<String> shotAt = null;
 		List<Ship> ships = null;
 		
-		if(c[0].equals("P1")){
+		if(c[0].equals("P1") && playerTurn.equals("P1")){
 			shotAt = shotAtP2;
 			ships = shipsP2;
 			
-		}else if(c[0].equals("P2")){
+		}else if(c[0].equals("P2") && playerTurn.equals("P2")){
 			shotAt = shotAtP1;
 			ships = shipsP1;
 		}
 		else{
-			return "bad player";
+			return "wrong_player";
 		}
 
 		if(shotAt.contains(attack)){
 			return "."; //previously shot
 		}
+		
+		playerTurn = playerTurn.equals("P1")?"P2":"P1"; // switch turn
 		
 		shotAt.add(attack);
 		
@@ -277,6 +282,12 @@ public class Server {
                     	response = initPlayer(pair[1]);
                     	
                     }
+                    else if (pair.length>1 && pair[0].equals("v")) { //voice commands
+                    	String command = pair[1].replace("x", " ");
+                    	parseCommand(command);
+                    	response = "cmd received";
+                    	
+                    }
                 }
         	}
 
@@ -293,6 +304,8 @@ public class Server {
             os.write(response.getBytes());
             os.close();
         }
+
+
     }
 
 }
