@@ -115,6 +115,8 @@ public class SpeechClient {
 		if(ss.length == 3){
 			return player +"x" +ss[1].substring(0, 1)+ss[2];
 		}
+		if(cmd.equals("STOP"))
+			return player +"xSTOP";
 		return null;
 		
 	}
