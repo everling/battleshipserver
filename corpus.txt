@@ -1,0 +1,26 @@
+attack alpha 1
+attack alpha 2
+attack alpha 3
+attack alpha 4
+attack alpha 5
+attack bravo 1
+attack bravo 2
+attack bravo 3
+attack bravo 4
+attack bravo 5
+attack charlie 1
+attack charlie 2
+attack charlie 3
+attack charlie 4
+attack charlie 5
+attack delta 1
+attack delta 2
+attack delta 3
+attack delta 4
+attack delta 5
+attack echo 1
+attack echo 2
+attack echo 3
+attack echo 4
+attack echo 5
+stop
