@@ -64,7 +64,7 @@ public class Server {
 		System.out.println(broadcast);
 		commandHistory.add(broadcast);
 		
-		if(result.equals("X")){
+		if(result.startsWith("X")){
 			String winner = returnWin();
 			if(winner != null){
 				broadcast = t++ +" " +winner +" " +"WIN";
