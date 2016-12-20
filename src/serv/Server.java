@@ -112,18 +112,26 @@ public class Server {
 	 */
 	public String initPlayer(String positions){
 		
-		String[] shipCoors = positions.split("x");
+		String[] shipUnits = positions.split("_");
 		
 		List<Ship> ships = new ArrayList<Ship>();
+	
+		if(shipUnits.length % 2 > 0)
+			return "Bad ship setup";
 		
-		for(String s : shipCoors){
-			if(s.length() % 2 > 0)
-				return "Bad ship coordinate";
-			Ship ship = new Ship(s);
-			ships.add(ship);
+		for(int i = 0; i < shipUnits.length-1; i+=2){
+			String name = shipUnits[i];
+			String coords = shipUnits[i+1];
 			
+			if(coords.length() % 2 > 0)
+				return "Bad ship coordinate";
+			
+			Ship ship = new Ship(coords);
+			ship.setName(name);
+			ships.add(ship);
 		}
-		
+
+
 		if(shipsP1 == null){
 			shipsP1 = ships;
 			return "P1";
@@ -153,6 +161,9 @@ public class Server {
 		else{
 			return;
 		}
+		
+		for(Ship s : ships)
+			System.out.println(s.getName());
 		
 		String alpha = "ABCDEFGHIJKLMOP";
 		
@@ -242,8 +253,8 @@ public class Server {
 		for(Ship s : ships){
 			if(s.isHit(attack)){
 				if(s.isSunk())
-					return "X";
-				return "x";
+					return "X "+s.getName();
+				return "x "+s.getName();
 			}
 		}
 		return "o";

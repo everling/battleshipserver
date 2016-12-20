@@ -8,7 +8,7 @@ public class Ship {
 	private List<String> occupies;
 	private List<String> hit;
 	
-	
+	private String name;
 	
 	/**
 	 * 
@@ -40,6 +40,14 @@ public class Ship {
 	
 	public boolean isSunk(){
 		return occupies.size() == hit.size();
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 	
 }
